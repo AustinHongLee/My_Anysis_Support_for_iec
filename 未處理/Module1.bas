@@ -467,9 +467,50 @@ Sub AddSteelSectionEntry(SectionType As String, Section_Dim As String, Total_Len
     End With
 End Sub
 
-Sub addPipeEntry(PipeSize As Variant, PipeThickness As Variant, Pipe_Length As Double)
+Sub AddPipeEntry(Pipe_Size As String, Pipe_Thickness As String, Pipe_Length As Double, Material As String)
+    Dim i As Integer
     
     Set ws = Worksheets("Weight_Analysis")
     
+    '特定標題
+    Pipe_ThickNess_For_Title = Pipe_Thickness
+   ' 可能性 "SCH.80"
     
+    If Pipe_Thickness <> "STD.WT" Then
+        Pipe_Thickness = Replace(Pipe_Thickness, "SCH.", "") & "S"
+    Else
+        Pipe_Thickness = Pipe_Thickness
+    End If
+    
+    
+    ' 找到第 B 列的下一個空白行
+    i = GetNextRowInColumnB()
+     With ws
+    ' 演算項次是否為1或其他
+    If .Cells(i, "A").value <> "" Then
+    First_Value_Checking = 1
+    Else
+    First_Value_Checking = .Cells(i - 1, "B").value + 1
+    End If
+'讀取相關管直徑 厚度 每米重量
+     
+   Set PipeDetails = CalculatePipeDetails(Pipe_Size, Pipe_Thickness)
+    
+    ' 填充數據
+   
+                .Cells(i, "B").value = First_Value_Checking
+                .Cells(i, "C").value = "Pipe" '品名
+                .Cells(i, "D").value = Pipe_Size & """" & "*" & Pipe_ThickNess_For_Title '尺寸厚度
+                .Cells(i, "E").value = Pipe_Length '長度
+                .Cells(i, "G").value = Material '材值
+                .Cells(i, "H").value = 1 '數量
+                .Cells(i, "I").value = PipeDetails.Item("WeightPerMeter") '每米重
+                .Cells(i, "J").value = .Cells(i, "E").value / 1000 * .Cells(i, "I").value '單重
+                .Cells(i, "K").value = .Cells(i, "J").value * .Cells(i, "H").value '重量小計
+                .Cells(i, "L").value = "M"
+                .Cells(i, "M").value = 1 '組數
+                .Cells(i, "N").value = .Cells(i, "H").value * .Cells(i, "M").value * .Cells(i, "E").value / 1000 '長度小計 組數*數量*長度/1000
+                .Cells(i, "P").value = .Cells(i, "M").value * .Cells(i, "K").value
+                .Cells(i, "Q").value = "素材類"
+    End With
 End Sub

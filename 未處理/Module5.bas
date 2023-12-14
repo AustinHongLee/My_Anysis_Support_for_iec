@@ -22,7 +22,7 @@ Sub ExportAllStandardModules()
     Dim sFilePath As String
     Dim nFileNum As Integer
 
-    SaveFolder = "C:\Users\a0976\OneDrive\AutoLisp 學習與公式架構\專案類別 - 繪製\My_Anysis_Support_for_iec" ' 更改為您的導出文件夾
+    SaveFolder = "C:\Users\a0976\OneDrive\AutoLisp 學習與公式架構\專案類別 - 繪製\My_Anysis_Support_for_iec\未處理" ' 更改為您的導出文件夾
 
     For Each VBComp In ThisWorkbook.VBProject.VBComponents
         If VBComp.Type = vbext_ct_StdModule Then
@@ -61,4 +61,5 @@ Function SaveAsUTF8(sContent As String, sFilePath As String)
     Put #nFileNum, , baBuffer
     Close #nFileNum
 End Function
+
 
